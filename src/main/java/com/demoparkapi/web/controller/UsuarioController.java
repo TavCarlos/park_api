@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demoparkapi.entity.Usuario;
 import com.demoparkapi.services.UsuarioService;
+import com.demoparkapi.web.dto.UsuarioPasswordDTO;
+import com.demoparkapi.web.dto.UsuarioRequestDTO;
+import com.demoparkapi.web.dto.UsuarioResponseDTO;
+import com.demoparkapi.web.dto.mapper.UsuarioMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,26 +29,26 @@ public class UsuarioController {
 	private final UsuarioService usuarioService;
 	
 	@PostMapping
-	public ResponseEntity<Usuario> create(@RequestBody Usuario usuario){
-		Usuario user = usuarioService.salvar(usuario);
-		return ResponseEntity.status(HttpStatus.CREATED).body(user);
+	public ResponseEntity<UsuarioResponseDTO> create(@RequestBody UsuarioRequestDTO usuarioDTO){
+		Usuario user = usuarioService.salvar(UsuarioMapper.toUsuario(usuarioDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toUsuarioResponseDTO(user));
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Usuario> getById(@PathVariable Long id){
+	public ResponseEntity<UsuarioResponseDTO> getById(@PathVariable Long id){
 		Usuario user = usuarioService.buscarPorId(id);
-		return ResponseEntity.ok(user);
+		return ResponseEntity.ok(UsuarioMapper.toUsuarioResponseDTO(user));
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Usuario>> getAll(){
+	public ResponseEntity<List<UsuarioResponseDTO>> getAll(){
 		List<Usuario> users = usuarioService.buscarTodos();
-		return ResponseEntity.ok(users);
+		return ResponseEntity.ok(UsuarioMapper.toListUsuarioResponseDTO(users));
 	}
 	
 	@PatchMapping("{id}")
-	public ResponseEntity<Usuario> updatePassword(@PathVariable Long id, @RequestBody Usuario usuario){
-		Usuario user = usuarioService.editarSenha(id, usuario.getPassword());
-		return ResponseEntity.ok(user);
+	public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UsuarioPasswordDTO SenhaDTO){
+		usuarioService.editarSenha(id, SenhaDTO.getSenhaAtual(), SenhaDTO.getNovaSenha(), SenhaDTO.getConfirmarSenha());
+		return ResponseEntity.noContent().build();
 	}
 }

@@ -29,9 +29,23 @@ public class UsuarioService {
 	}
 	
 	@Transactional
-	public Usuario editarSenha(Long id, String password) {
+	public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmarSenha) {
+		
+		if(!novaSenha.equals(confirmarSenha)) {
+			throw new RuntimeException("A nova senha não confere com a confirmação de senha");
+		}
+		
 		Usuario user = buscarPorId(id);
-		user.setPassword(password);
+		
+		if(!user.getPassword().equals(senhaAtual)) {
+			throw new RuntimeException("Senha atual incorreta");
+		}
+		
+		if(senhaAtual.equals(novaSenha)) {
+			throw new RuntimeException("A nova senha não pode ser igual a senha atual.");
+		}
+		
+		user.setPassword(novaSenha);
 		return user;
 	}
 

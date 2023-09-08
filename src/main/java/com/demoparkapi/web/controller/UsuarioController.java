@@ -19,6 +19,7 @@ import com.demoparkapi.web.dto.UsuarioRequestDTO;
 import com.demoparkapi.web.dto.UsuarioResponseDTO;
 import com.demoparkapi.web.dto.mapper.UsuarioMapper;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class UsuarioController {
 	private final UsuarioService usuarioService;
 	
 	@PostMapping
-	public ResponseEntity<UsuarioResponseDTO> create(@RequestBody UsuarioRequestDTO usuarioDTO){
+	public ResponseEntity<UsuarioResponseDTO> create(@Valid @RequestBody UsuarioRequestDTO usuarioDTO){
 		Usuario user = usuarioService.salvar(UsuarioMapper.toUsuario(usuarioDTO));
 		return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toUsuarioResponseDTO(user));
 	}
@@ -47,7 +48,7 @@ public class UsuarioController {
 	}
 	
 	@PatchMapping("{id}")
-	public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UsuarioPasswordDTO SenhaDTO){
+	public ResponseEntity<Void> updatePassword(@PathVariable Long id, @Valid @RequestBody UsuarioPasswordDTO SenhaDTO){
 		usuarioService.editarSenha(id, SenhaDTO.getSenhaAtual(), SenhaDTO.getNovaSenha(), SenhaDTO.getConfirmarSenha());
 		return ResponseEntity.noContent().build();
 	}

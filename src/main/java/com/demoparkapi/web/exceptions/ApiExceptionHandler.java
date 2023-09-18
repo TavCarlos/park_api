@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.demoparkapi.exceptions.UsernameUniqueViolationException;
+import com.demoparkapi.exceptions.CpfUniqueViolationException;
 import com.demoparkapi.exceptions.EntityNotFoundException;
 import com.demoparkapi.exceptions.PasswordInvalidException;
 
@@ -23,7 +24,7 @@ public class ApiExceptionHandler {
 				.body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Campo(s) invalido(s)", result));
 	}
 	
-	@ExceptionHandler(UsernameUniqueViolationException.class)
+	@ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
 	public ResponseEntity<ErrorMessage> UsernameUniqueViolationException(RuntimeException ex, HttpServletRequest request){
 		return ResponseEntity.status(HttpStatus.CONFLICT)
 				.contentType(MediaType.APPLICATION_JSON)

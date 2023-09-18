@@ -13,7 +13,6 @@ import com.demoparkapi.exceptions.PasswordInvalidException;
 import com.demoparkapi.exceptions.UsernameUniqueViolationException;
 import com.demoparkapi.repository.UsuarioRepository;
 
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -34,7 +33,7 @@ public class UsuarioService {
 	@Transactional(readOnly = true)
 	public Usuario buscarPorId(Long id) {
 		return usuarioRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException(String.format("Usuário id={id} não encontrado.", id)));
+				() -> new EntityNotFoundException(String.format("Usuário id={%id} não encontrado.", id)));
 	}
 	
 	@Transactional
@@ -48,10 +47,6 @@ public class UsuarioService {
 		
 		if(!user.getPassword().equals(senhaAtual)) {
 			throw new PasswordInvalidException("Senha atual incorreta");
-		}
-		
-		if(senhaAtual.equals(novaSenha)) {
-			throw new PasswordInvalidException("A nova senha não pode ser igual a senha atual.");
 		}
 		
 		user.setPassword(novaSenha);
@@ -73,6 +68,4 @@ public class UsuarioService {
 	public Role buscarRolePorUsername(String username) {
 		return usuarioRepository.findRoleByUsername(username);
 	}
-	
-	
 }

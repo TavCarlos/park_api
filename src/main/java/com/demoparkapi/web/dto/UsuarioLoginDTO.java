@@ -10,9 +10,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioRequestDTO {
+@NoArgsConstructor
+public class UsuarioLoginDTO {
 
 	@NotBlank
 	@Email(message = "Formato de Email inválido", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
@@ -20,4 +20,5 @@ public class UsuarioRequestDTO {
 	@NotBlank
 	@Size(min = 6, max = 6)
 	private String password;
+	
 }

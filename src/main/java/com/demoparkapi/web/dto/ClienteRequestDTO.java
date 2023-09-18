@@ -1,6 +1,7 @@
 package com.demoparkapi.web.dto;
 
-import jakarta.validation.constraints.Email;
+import org.hibernate.validator.constraints.br.CPF;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -12,12 +13,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioRequestDTO {
+public class ClienteRequestDTO {
 
 	@NotBlank
-	@Email(message = "Formato de Email inválido", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
-	private String username;
-	@NotBlank
-	@Size(min = 6, max = 6)
-	private String password;
+	@Size(min = 5, max = 100)
+	private String nome;
+	
+	@Size(min = 11, max = 11)
+	@CPF
+	private String cpf;
 }

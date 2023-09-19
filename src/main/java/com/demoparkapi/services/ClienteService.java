@@ -1,12 +1,15 @@
 package com.demoparkapi.services;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demoparkapi.entity.Cliente;
 import com.demoparkapi.exceptions.CpfUniqueViolationException;
 import com.demoparkapi.repository.ClienteRepository;
+import com.demoparkapi.repository.projection.ClienteProjection;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +34,11 @@ public class ClienteService {
 		return repository.findById(id).orElseThrow(
 				() -> new EntityNotFoundException(String.format("Cliente de id = {%s} não encontrado no sistema", id)));
 	}
+	
+	
+	@Transactional(readOnly = true)
+	public Page<ClienteProjection> buscarTodos(Pageable pageable){
+		return repository.findAllClientes(pageable);
+	}
+	
 }

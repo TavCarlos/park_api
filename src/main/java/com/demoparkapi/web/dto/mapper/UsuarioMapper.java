@@ -10,6 +10,10 @@ import com.demoparkapi.entity.Usuario;
 import com.demoparkapi.web.dto.UsuarioRequestDTO;
 import com.demoparkapi.web.dto.UsuarioResponseDTO;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UsuarioMapper {
 
 	public static Usuario toUsuario(UsuarioRequestDTO usuarioDTO) {

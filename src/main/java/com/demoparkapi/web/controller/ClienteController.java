@@ -1,5 +1,8 @@
 package com.demoparkapi.web.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,14 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demoparkapi.entity.Cliente;
+import com.demoparkapi.repository.projection.ClienteProjection;
 import com.demoparkapi.services.ClienteService;
 import com.demoparkapi.services.UsuarioService;
 import com.demoparkapi.web.dto.ClienteRequestDTO;
 import com.demoparkapi.web.dto.ClienteResponseDTO;
+import com.demoparkapi.web.dto.PageableDTO;
 import com.demoparkapi.web.dto.mapper.ClienteMapper;
+import com.demoparkapi.web.dto.mapper.PageableMapper;
 import com.demoparkapi.web.exceptions.ErrorMessage;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -54,8 +62,8 @@ public class ClienteController {
 	}
 	
 	
-	@Operation(summary = "Localizar um cliente pelo ID", responses = {
-			@ApiResponse(responseCode = "200", description = "Recurso localido com sucesso", 
+	@Operation(summary = "Recupera um cliente pelo ID", responses = {
+			@ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso", 
 					content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ClienteResponseDTO.class))),
 			@ApiResponse(responseCode = "404", description = "Cliente não localizado",
 					content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ClienteResponseDTO.class)))
@@ -65,5 +73,29 @@ public class ClienteController {
 	public ResponseEntity<ClienteResponseDTO> findById(@PathVariable Long id){
 		Cliente cliente = clienteService.buscarPorId(id);
 		return ResponseEntity.ok(ClienteMapper.toClienteDTO(cliente));
+	}
+	
+	@Operation(summary = "Recupera uma lista de clientes",
+			parameters = {
+				@Parameter(in = ParameterIn.QUERY, name = "page",
+						content = @Content(schema = @Schema(type = "integer", defaultValue = "0")),
+						description = "Representa a página retornada"),
+				@Parameter(in = ParameterIn.QUERY, name = "size",
+						content = @Content(schema = @Schema(type = "integer", defaultValue = "10")),
+						description = "Representa o total de elementos da página"),
+				@Parameter(in = ParameterIn.QUERY, name = "sort", hidden = true,
+						content = @Content(schema = @Schema(type = "integer", defaultValue = "id,asc")),
+						description = "Representa a ordenação do resultado")
+			}, 
+			
+			responses = {
+			@ApiResponse(responseCode = "200", description = "recurso localizado com sucesso",
+					content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = PageableDTO.class)))
+	})
+	
+	@GetMapping
+	public ResponseEntity<PageableDTO> findAll(@Parameter(hidden = true) @PageableDefault Pageable pageable){
+		Page<ClienteProjection> clientes = clienteService.buscarTodos(pageable);
+		return ResponseEntity.ok(PageableMapper.toPageDTO(clientes));
 	}
 }

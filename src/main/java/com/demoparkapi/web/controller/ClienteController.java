@@ -29,9 +29,11 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Cliente", description = "Contém todas as operações relativas aos recursos para cadastro, edição e leitura de um cliente")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/clientes")

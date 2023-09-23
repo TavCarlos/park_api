@@ -1,12 +1,18 @@
 package com.demoparkapi.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import com.demoparkapi.enums.Role;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,18 +38,6 @@ public class Usuario implements Serializable{
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false, length = 25)
 	private Role role = Role.ROLE_CLIENT;
-	
-	@Column(name = "creation_date")
-	private LocalDateTime creationDate;
-	
-	@Column(name = "modification_date")
-	private LocalDateTime modificationDate;
-	
-	@Column(name = "created_by")
-	private String createdBy;
-	
-	@Column(name = "modified_by")
-	private String modifiedBy;
 
 	
 	@Override

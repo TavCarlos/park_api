@@ -11,7 +11,7 @@ import com.demoparkapi.exceptions.CpfUniqueViolationException;
 import com.demoparkapi.repository.ClienteRepository;
 import com.demoparkapi.repository.projection.ClienteProjection;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.demoparkapi.exceptions.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -39,6 +39,11 @@ public class ClienteService {
 	@Transactional(readOnly = true)
 	public Page<ClienteProjection> buscarTodos(Pageable pageable){
 		return repository.findAllClientes(pageable);
+	}
+
+	public Cliente buscarPorCpf(String cpf) {
+		return repository.findByCpf(cpf).orElseThrow(
+				() -> new EntityNotFoundException(String.format("Cliente com cpf '%s' não encontrado", cpf)));
 	}
 	
 }

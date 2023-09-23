@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demoparkapi.entity.Vaga;
+import com.demoparkapi.enums.StatusVaga;
 import com.demoparkapi.exceptions.CodigoUniqueViolationExecption;
 import com.demoparkapi.exceptions.EntityNotFoundException;
 import com.demoparkapi.repository.VagaRepository;
@@ -31,5 +32,10 @@ public class VagaService {
 		return vagaRepository.findByCodigo(codigo).orElseThrow(
 				() -> new EntityNotFoundException(String.format("Vaga com codigo '%s' não encontrado", codigo))
 		);
+	}
+
+	public Vaga buscarVagaLivre() {
+		return vagaRepository.findFristByStatus(StatusVaga.LIVRE).orElseThrow(
+				() -> new EntityNotFoundException("Vaga livre não encontrada"));
 	}
 }

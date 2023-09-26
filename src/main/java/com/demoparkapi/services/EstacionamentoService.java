@@ -1,5 +1,6 @@
 package com.demoparkapi.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
@@ -32,6 +33,25 @@ public class EstacionamentoService {
 		
 		clienteVaga.setRecibo(EstacionamentoUtils.gerarRecibo());
 		clienteVaga.setDataEntrada(LocalDateTime.now());
+		
+		return clienteVagaService.salvar(clienteVaga);
+	}
+	
+	@Transactional
+	public ClienteVaga checkOut(String recibo) {
+		ClienteVaga clienteVaga = clienteVagaService.buscarPorRecibo(recibo);
+		
+		LocalDateTime dataSaida = LocalDateTime.now();
+		
+		BigDecimal valor = EstacionamentoUtils.calcularCusto(clienteVaga.getDataEntrada(), dataSaida);
+		clienteVaga.setValor(valor);
+		
+		long totalDeVezes = clienteVagaService.getTotalDeVezesEstacionamentoCompleto(clienteVaga.getCliente().getCpf());
+		BigDecimal desconto = EstacionamentoUtils.calcularDesconto(valor, totalDeVezes);
+		clienteVaga.setDesconto(desconto);
+		
+		clienteVaga.setDataSaida(dataSaida);
+		clienteVaga.getVaga().setStatus(StatusVaga.LIVRE);
 		
 		return clienteVagaService.salvar(clienteVaga);
 	}
